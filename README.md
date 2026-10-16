@@ -3,10 +3,11 @@
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.13%2B-orange.svg)](https://tensorflow.org/)
 [![Architecture](https://img.shields.io/badge/Model-InceptionV3-red.svg)](https://arxiv.org/abs/1512.00567)
+[![React](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Vite-61dafb.svg)](https://react.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Clinical Scale](https://img.shields.io/badge/Grading-ICDR%20Standard-purple.svg)](https://www.aao.org/)
 
-An automated clinical deep learning system for screening, detecting, and grading **Diabetic Retinopathy (DR)** from digital fundus photography using **InceptionV3 transfer learning and fine-tuning** in **TensorFlow/Keras**.
+An automated clinical deep learning system for screening, detecting, and grading **Diabetic Retinopathy (DR)** from digital fundus photography using **InceptionV3 transfer learning and fine-tuning** in **TensorFlow/Keras** with a modern **React.js web dashboard**.
 
 ---
 
@@ -23,7 +24,9 @@ An automated clinical deep learning system for screening, detecting, and grading
   - [2. Model Training](#2-model-training)
   - [3. Evaluation & Metrics](#3-evaluation--metrics)
   - [4. Single & Batch Inference](#4-single--batch-inference)
-  - [5. Interactive Streamlit Web UI](#5-interactive-streamlit-web-ui)
+  - [5. React.js Modern Web Interface (Vite + React 18)](#5-reactjs-modern-web-interface-vite--react-18)
+  - [6. Streamlit Alternative Dashboard](#6-streamlit-alternative-dashboard)
+  - [7. CLI Image Statistics & Accuracy Inspector](#7-command-line-statistics--accuracy-inspector)
 - [Explainability with Grad-CAM](#-explainability-with-grad-cam)
 - [Evaluation Metrics](#-evaluation-metrics)
 - [License](#-license)
@@ -109,12 +112,25 @@ Retinal imaging often suffers from non-uniform illumination, variable camera exp
 
 ```text
 diabetic_retinopathy_project_ml/
+├── frontend/                    # Modern React 18 + Vite Web Dashboard
+│   ├── src/
+│   │   ├── components/          # RetinalStatistics, AccuracyVerifier, BatchEvaluation, etc.
+│   │   ├── services/            # Client-side image analysis & prediction engine
+│   │   ├── styles/              # Dark clinical theme styles
+│   │   ├── App.jsx              # Main React dashboard component
+│   │   └── main.jsx
+│   ├── package.json
+│   ├── vite.config.js
+│   └── index.html
+├── api/
+│   └── main.py                  # FastAPI REST backend connecting React to InceptionV3
 ├── config/
 │   └── config.yaml              # Hyperparameters, augmentation & path settings
 ├── src/
 │   ├── __init__.py
 │   ├── config_loader.py         # Config parser & validator
 │   ├── preprocessing.py         # Ben Graham filter & circular ROI cropping
+│   ├── image_statistics.py      # Photometric metrics, sharpness & accuracy verification
 │   ├── data_loader.py           # Augmentation generators & class weight balancer
 │   ├── model.py                 # InceptionV3 architecture & 2-phase builder
 │   ├── train.py                 # Two-phase training pipeline & checkpointing
@@ -123,10 +139,11 @@ diabetic_retinopathy_project_ml/
 │   ├── gradcam.py               # Grad-CAM explainable AI heatmap generator
 │   └── utils.py                 # Reproducibility seed & visualization tools
 ├── app/
-│   └── app.py                   # Interactive Streamlit Web UI
+│   └── app.py                   # Alternative Streamlit Web Dashboard
 ├── scripts/
 │   ├── prepare_data.py          # Stratified train/val/test data organizer
 │   ├── generate_synthetic_data.py # Synthetic sample generator for testing
+│   ├── analyze_image.py         # CLI image statistics & accuracy verification tool
 │   └── run_training.sh          # One-click training launcher script
 ├── notebooks/
 │   └── 01_diabetic_retinopathy_exploration.ipynb
