@@ -1,6 +1,6 @@
 """
 Unit tests for Diabetic Retinopathy Machine Learning Pipeline.
-Tests configuration loading, image preprocessing, and model architecture.
+Tests configuration loading, image preprocessing, image statistics, and accuracy computation.
 """
 
 import os
@@ -8,6 +8,7 @@ import pytest
 import numpy as np
 from src.config_loader import load_config
 from src.preprocessing import ben_graham_enhancement, crop_retinal_roi, inception_preprocess
+from src.image_statistics import compute_image_statistics, compute_sample_accuracy
 
 
 def test_config_loader():
@@ -31,9 +32,8 @@ def test_ben_graham_enhancement():
 
 def test_crop_retinal_roi():
     """Verify circular ROI crop strips borders correctly."""
-    # Create image with outer black margin
     img = np.zeros((300, 300, 3), dtype=np.uint8)
-    img[50:250, 50:250] = 180  # Central region
+    img[50:250, 50:250] = 180
 
     cropped = crop_retinal_roi(img, tolerance=10)
     assert cropped.shape[0] < 300
@@ -47,3 +47,35 @@ def test_inception_preprocessing_range():
 
     assert processed.min() >= -1.05
     assert processed.max() <= 1.05
+
+
+def test_image_statistics():
+    """Verify photometric and sharpness metrics computation."""
+    dummy_fundus = np.zeros((300, 300, 3), dtype=np.uint8)
+    # Put a circle to simulate retina
+    cv2_circle = np.zeros((300, 300), dtype=np.uint8)
+    dummy_fundus[50:250, 50:250, 0] = 180
+    dummy_fundus[50:250, 50:250, 1] = 60
+    dummy_fundus[50:250, 50:250, 2] = 20
+
+    stats = compute_image_statistics(dummy_fundus)
+    assert "sharpness" in stats
+    assert "photometry" in stats
+    assert "channels" in stats
+    assert stats["dimensions"]["width"] == 300
+    assert stats["dimensions"]["height"] == 300
+    assert stats["photometry"]["retinal_coverage_pct"] > 0
+
+
+def test_sample_accuracy_computation():
+    """Verify ground truth comparison and accuracy scores."""
+    # Exact match
+    match_res = compute_sample_accuracy(predicted_class=2, ground_truth_class=2)
+    assert match_res["exact_match"] is True
+    assert match_res["quadratic_score"] == 1.0
+
+    # 1 stage difference
+    minor_res = compute_sample_accuracy(predicted_class=2, ground_truth_class=3)
+    assert minor_res["exact_match"] is False
+    assert minor_res["stage_difference"] == 1
+    assert minor_res["quadratic_score"] == 0.9375

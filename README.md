@@ -256,14 +256,41 @@ python -m src.predict --dir path/to/test_images/ --output_csv predictions.csv
 
 ---
 
-### 5. Interactive Streamlit Web UI
+### 5. Interactive Web UI & Image Statistics Analyzer
 
-Launch the clinician dashboard:
+Launch the interactive clinician and researcher dashboard:
 
 ```bash
 streamlit run app/app.py
 ```
-Open your browser at `http://localhost:8501` to drag and drop fundus photographs, view live InceptionV3 predictions, inspect Ben Graham enhancement, and view Grad-CAM heatmaps.
+Open your browser at `http://localhost:8501`.
+
+#### Features in the Interface:
+1. **Single Image Upload & Accuracy Check**:
+   - Upload any retinal fundus image (`.png`, `.jpg`, `.jpeg`, `.tiff`).
+   - Select a verified ground-truth diagnosis to test diagnostic accuracy and quadratic score.
+   - Inspect side-by-side: **Raw Fundus** vs **Ben Graham Enhanced** vs **Grad-CAM Lesion Heatmap**.
+2. **Comprehensive Retinal Statistics**:
+   - **Sharpness Index (Laplacian Variance)**: Validates if the photograph is clinically gradable or blurred.
+   - **Photometric Luminance & Uniformity**: Mean brightness, RMS contrast, overexposed flash glare %, underexposed shadow %.
+   - **Retinal Coverage**: Measures percentage of field of view occupied by retinal tissue vs black margin.
+   - **RGB Spectral Distribution**: Visualizes red, green, and blue channel histograms for vascular profiling.
+3. **Batch Upload & Cohort Accuracy Testing**:
+   - Upload multiple images simultaneously.
+   - Auto-detects ground truth stages from filenames (e.g. `0_NoDR_01.png`, `stage2_sample.jpg`).
+   - Computes batch accuracy, average sharpness, gradability rates, and exports a structured CSV report.
+4. **Preloaded Test Gallery**:
+   - Instant 1-click test gallery across all 5 ICDR stages without needing to find image files.
+
+---
+
+### 6. Command-Line Statistics & Accuracy Inspector
+
+You can also run image statistics and accuracy checks directly from your terminal:
+
+```bash
+python scripts/analyze_image.py --image path/to/retina.png --ground_truth 2
+```
 
 ---
 
