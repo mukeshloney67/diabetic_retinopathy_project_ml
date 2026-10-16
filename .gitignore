@@ -1,0 +1,62 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Datasets - large binary files
+data/train/*
+data/validation/*
+data/test/*
+!data/.gitkeep
+*.zip
+*.tar.gz
+*.csv
+
+# Model checkpoints - large binary files
+models/*.h5
+models/*.keras
+models/*.pb
+models/variables/
+!models/.gitkeep
+
+# Logs and outputs
+logs/*
+!logs/.gitkeep
+*.log
+tensorboard/

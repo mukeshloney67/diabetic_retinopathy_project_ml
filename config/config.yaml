@@ -1,0 +1,98 @@
+# ==============================================================================
+# Diabetic Retinopathy Detection & Severity Classification - Configuration
+# ==============================================================================
+
+project:
+  name: "diabetic_retinopathy_project_ml"
+  version: "1.0.0"
+  author: "Mukesh Kumar"
+  seed: 42
+
+# Dataset Configuration
+data:
+  train_dir: "data/train"
+  validation_dir: "data/validation"
+  test_dir: "data/test"
+  image_size: 299 # Default input size for InceptionV3
+  channels: 3
+  num_classes: 5
+  class_names:
+    - "No_DR"
+    - "Mild"
+    - "Moderate"
+    - "Severe"
+    - "Proliferative_DR"
+  class_descriptions:
+    0: "No Diabetic Retinopathy detected"
+    1: "Mild Non-Proliferative Diabetic Retinopathy (Microaneurysms only)"
+    2: "Moderate Non-Proliferative Diabetic Retinopathy (More than microaneurysms, but less than severe)"
+    3: "Severe Non-Proliferative Diabetic Retinopathy (Extensive intraretinal hemorrhages / venous beading)"
+    4: "Proliferative Diabetic Retinopathy (Neovascularization, preretinal/vitreous hemorrhage)"
+
+# Preprocessing & Data Augmentation
+preprocessing:
+  apply_ben_graham: true # Retinal contrast enhancement filter
+  sigma_x: 10
+  crop_roi: true # Crop circular retinal boundary
+
+augmentation:
+  rotation_range: 30
+  width_shift_range: 0.15
+  height_shift_range: 0.15
+  shear_range: 0.15
+  zoom_range: 0.2
+  horizontal_flip: true
+  vertical_flip: true
+  fill_mode: "nearest"
+
+# InceptionV3 Model Architecture
+model:
+  architecture: "InceptionV3"
+  pretrained_weights: "imagenet"
+  input_shape: [299, 299, 3]
+  global_pooling: "avg"
+  dense_units_1: 512
+  dropout_1: 0.4
+  dense_units_2: 256
+  dropout_2: 0.3
+  fine_tune_at_layer: 249 # Unfreeze top InceptionV3 layers (from ~311 total)
+
+# Two-Phase Training Strategy
+training:
+  use_class_weights: true
+
+  # Phase 1: Transfer Learning (Feature Extractor frozen, train head)
+  phase1:
+    epochs: 10
+    batch_size: 32
+    learning_rate: 0.001
+    optimizer: "adam"
+
+  # Phase 2: Fine-Tuning (Unfreeze upper Inception layers with low LR)
+  phase2:
+    epochs: 25
+    batch_size: 16
+    learning_rate: 0.00001
+    optimizer: "adam"
+
+  # Callbacks & Regularization
+  early_stopping:
+    monitor: "val_accuracy"
+    patience: 8
+    restore_best_weights: true
+  reduce_lr:
+    monitor: "val_loss"
+    factor: 0.5
+    patience: 3
+    min_lr: 0.0000001
+
+# Storage Paths
+paths:
+  model_dir: "models"
+  best_model_path: "models/best_model.keras"
+  final_model_path: "models/final_model.keras"
+  history_path: "models/training_history.json"
+  log_dir: "logs"
+  confusion_matrix_path: "logs/confusion_matrix.png"
+  roc_curve_path: "logs/roc_curve.png"
+  evaluation_report_path: "logs/evaluation_report.json"
