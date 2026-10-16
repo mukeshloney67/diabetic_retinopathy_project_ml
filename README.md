@@ -256,33 +256,47 @@ python -m src.predict --dir path/to/test_images/ --output_csv predictions.csv
 
 ---
 
-### 5. Interactive Web UI & Image Statistics Analyzer
+### 5. React.js Modern Web Interface (Vite + React 18)
 
-Launch the interactive clinician and researcher dashboard:
+A responsive, high-performance web interface built with **React 18** and **Vite** featuring drag-and-drop image uploading, live photometric statistics, accuracy verification against ground-truth stages, and batch cohort analysis.
+
+```bash
+# 1. Navigate to frontend and install dependencies
+cd frontend
+npm install
+
+# 2. Start the development server
+npm run dev
+```
+Open **`http://localhost:3000`** in your browser.
+
+*(Optional) Start the FastAPI backend server to serve live InceptionV3 predictions directly:*
+```bash
+uvicorn api.main:app --reload --port 8000
+```
+
+#### Key Capabilities:
+- **📸 Single Image Diagnostic & Retinal Statistics**:
+  - Drag-and-drop fundus photograph upload (PNG, JPG, TIFF).
+  - Photometric statistics: **Sharpness Index (Laplacian Variance)**, **Retinal FOV Coverage %**, **Mean Luminance**, **RMS Contrast**, and **Uniformity Ratio**.
+  - **Clinical Grading & Accuracy**: Real-time evaluation against user-selected ground truth (Exact Match vs Stage Discrepancy & Quadratic Score).
+  - **RGB Spectral Histograms**: Multi-channel curve visualization for vascular & hemorrhage profiling.
+- **📂 Batch Upload & Cohort Accuracy Testing**:
+  - Upload multiple retinal fundus images simultaneously.
+  - Automatically extracts ground truth from filenames.
+  - Computes cohort accuracy (%), average sharpness, gradability rates, and exports a structured CSV report.
+- **🖼️ Preloaded Clinical Test Gallery**:
+  - Test all 5 ICDR clinical stages with 1 click without needing local image files.
+
+---
+
+### 6. Streamlit Alternative Dashboard
 
 ```bash
 streamlit run app/app.py
 ```
 Open your browser at `http://localhost:8501`.
 
-#### Features in the Interface:
-1. **Single Image Upload & Accuracy Check**:
-   - Upload any retinal fundus image (`.png`, `.jpg`, `.jpeg`, `.tiff`).
-   - Select a verified ground-truth diagnosis to test diagnostic accuracy and quadratic score.
-   - Inspect side-by-side: **Raw Fundus** vs **Ben Graham Enhanced** vs **Grad-CAM Lesion Heatmap**.
-2. **Comprehensive Retinal Statistics**:
-   - **Sharpness Index (Laplacian Variance)**: Validates if the photograph is clinically gradable or blurred.
-   - **Photometric Luminance & Uniformity**: Mean brightness, RMS contrast, overexposed flash glare %, underexposed shadow %.
-   - **Retinal Coverage**: Measures percentage of field of view occupied by retinal tissue vs black margin.
-   - **RGB Spectral Distribution**: Visualizes red, green, and blue channel histograms for vascular profiling.
-3. **Batch Upload & Cohort Accuracy Testing**:
-   - Upload multiple images simultaneously.
-   - Auto-detects ground truth stages from filenames (e.g. `0_NoDR_01.png`, `stage2_sample.jpg`).
-   - Computes batch accuracy, average sharpness, gradability rates, and exports a structured CSV report.
-4. **Preloaded Test Gallery**:
-   - Instant 1-click test gallery across all 5 ICDR stages without needing to find image files.
-
----
 
 ### 6. Command-Line Statistics & Accuracy Inspector
 
