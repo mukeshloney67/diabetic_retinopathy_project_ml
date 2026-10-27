@@ -140,6 +140,16 @@ tests/               Automated tests
 artifacts/           Local-only training outputs (ignored)
 ```
 
+## Additional retained components
+
+This repository also retains an earlier full-stack dashboard, FastAPI endpoint,
+Streamlit application, Grad-CAM utilities, exploratory notebook, and image
+analysis tools under `frontend/`, `api/`, `app/`, and the top-level `src/`.
+The reproducible manifest-driven InceptionV3 workflow documented above lives in
+`src/dr_classifier/`. The legacy directory-organizing preparation script is
+available as `scripts/prepare_directory_dataset.py`; `scripts/prepare_data.py`
+is the manifest-based CLI wrapper used by this workflow.
+
 ## License
 
 No license has been granted yet. Add an explicit license before redistributing

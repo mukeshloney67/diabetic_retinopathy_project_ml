@@ -36,3 +36,13 @@ models/*
 *.weights.h5
 *.log
 tensorboard/
+
+# Existing dashboard / notebook tooling
+frontend/node_modules/
+frontend/dist/
+.env.local
+.ipynb_checkpoints/
+logs/*
+!logs/.gitkeep
+*.zip
+*.tar.gz
