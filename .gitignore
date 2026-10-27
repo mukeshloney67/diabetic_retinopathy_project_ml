@@ -1,0 +1,38 @@
+# Python environments and generated Python files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor and operating-system files
+.DS_Store
+.idea/
+.vscode/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Data and ML artifacts (never commit patient data or trained weights)
+data/*
+!data/README.md
+!data/.gitkeep
+artifacts/*
+!artifacts/.gitkeep
+models/*
+!models/.gitkeep
+*.keras
+*.h5
+*.hdf5
+*.tflite
+*.onnx
+*.ckpt
+*.weights.h5
+*.log
+tensorboard/

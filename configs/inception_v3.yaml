@@ -1,0 +1,50 @@
+# All relative paths are resolved from this file's directory.
+project:
+  name: diabetic_retinopathy_inception_v3
+
+data:
+  images_dir: ../data/images
+  labels_file: ../data/labels.csv
+  split_file: ../data/splits.csv
+  image_column: image_id
+  label_column: diagnosis
+  # Set this to a real patient identifier when available. It prevents images
+  # from the same patient appearing in different splits.
+  patient_column: null
+  image_extension: .png
+  train_fraction: 0.70
+  validation_fraction: 0.15
+  test_fraction: 0.15
+
+model:
+  input_size: [299, 299]
+  class_names:
+    - No DR
+    - Mild
+    - Moderate
+    - Severe
+    - Proliferative DR
+  pretrained_weights: imagenet
+  dense_units: 512
+  dropout_rate: 0.35
+  augmentation:
+    horizontal_flip: true
+    rotation_factor: 0.08
+    zoom_height_factor: 0.12
+    zoom_width_factor: 0.12
+    contrast_factor: 0.10
+
+training:
+  seed: 42
+  batch_size: 16
+  freeze_epochs: 8
+  fine_tune_epochs: 12
+  initial_learning_rate: 0.0003
+  fine_tune_learning_rate: 0.00001
+  unfreeze_fraction: 0.20
+  patience: 4
+  reduce_lr_factor: 0.5
+  min_learning_rate: 0.000001
+  use_class_weights: true
+  mixed_precision: false
+  output_dir: ../artifacts/runs
